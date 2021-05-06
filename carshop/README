@@ -144,6 +144,7 @@ Installation:
 
 
 git clone https://github.com/k0inwork/dealers
-cd dealer/carshop
+cd dealer
+cd carshop
 pip install -r requirements.txt
 python3 manage.py runserver
