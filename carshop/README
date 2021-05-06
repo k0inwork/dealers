@@ -1,6 +1,10 @@
 Carshop Backend
 
 Django-based backend for Carshop
+
+Admin:
+ admin/admin
+
 EndPoints:
 
 1. Add a Car
