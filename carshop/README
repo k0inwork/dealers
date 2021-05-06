@@ -9,7 +9,7 @@ Admin:
 
 EndPoints:
 
-1. Add a Car
+1. Add a Car for sale
 
 curl -d '{"model":"COROLLA","price":1,"serialid":11223, "color":"Grey","year":2018}' -H "Content-Type: application/json" -X POST http://localhost:8000/shop/addCar 
 
