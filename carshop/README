@@ -1,0 +1,135 @@
+Carshop Backend
+
+Django-based backend for Carshop
+EndPoints:
+
+1. Add a Car
+
+curl -d '{"model":"COROLLA","price":1,"serialid":11223, "color":"Grey","year":2018}' -H "Content-Type: application/json" -X POST http://localhost:8000/shop/addCar 
+
+It is assumed that a model name is unique across several manufacturers
+
+JSON:
+{"model":"COROLLA","price":1,"serialid":11223, "color":"Grey","year":2021}
+
+RESPONSE:
+{"id":9,"color":"Grey","price":"1.00","serialid":11223,"present":true,"model":{"id":11,"modelName":"COROLLA","year":2021,"manufactorer":{"id":4,"name":"Toyota"}}}
+
+2. View all cars for sale
+
+http://127.0.0.1:8000/shop/cars?model_modelName=COROLLA
+
+Available parameters:
+ 'model_modelName=COROLLA' - car model
+ 'model__manufactorer__name=Ford' - car model manufactorer (Ford,Opel etc)
+ 'pricerange=a,b' - required price range, a or b may be omitted
+ http://127.0.0.1:8000/shop/cars?pricerange=10000, (price >= 10000)
+
+RESPONSE:
+[
+    {
+        "id": 4,
+        "color": "White",
+        "price": "10000.00",
+        "serialid": 1112233,
+        "present": true,
+        "model": {
+            "id": 11,
+            "modelName": "COROLLA",
+            "year": 2021,
+            "manufactorer": {
+                "id": 4,
+                "name": "Toyota"
+            }
+        }
+    },
+    {
+        "id": 5,
+        "color": "White",
+        "price": "11111.00",
+        "serialid": 11112,
+        "present": true,
+        "model": {
+            "id": 4,
+            "modelName": "V40",
+            "year": 2021,
+            "manufactorer": {
+                "id": 2,
+                "name": "Volvo"
+            }
+        }
+    }
+]
+
+3. Sell a car
+curl -d '{"carid":5,"dealer":"Petr"}' -H "Content-Type: application/json" -X POST http://localhost:8000/shop/sell
+
+Available parameters:
+  carid - Car id
+  dealer - name of the dealer
+  realprice - if given, states the real cost of the car, not the given in the cars price
+
+Car is marked as non-present and a Deal is recorded 
+Only present (non-sold) car is available for sale
+
+JSON:
+{"carid":5,"dealer":"Petr"}
+ 
+RESPONSE:
+Deal data
+
+{
+    "id":5,
+    "realprice":null,
+    "date":"2021-05-06T18:13:56.712500Z",
+    "car":
+        {"id":5,"color":"White","price":"11111.00","serialid":11112,"present":false,"model":4},
+    "dealer":{"id":2,"name":"Petr","phone":"+78129990033"}
+}
+
+4. List deals by dealer
+http://127.0.0.1:8000/shop/deals?dealer=Petr
+
+Parameters:
+    dealer - dealer name
+
+RESPONSE:
+[
+    {
+        "id": 2,
+        "realprice": 10000,
+        "date": "2021-05-06T11:23:56Z",
+        "car": {
+            "id": 3,
+            "color": "Green",
+            "price": "21000.00",
+            "serialid": 2221,
+            "present": false,
+            "model": 8
+        },
+        "dealer": {
+            "id": 2,
+            "name": "Petr",
+            "phone": "+78129990033"
+        }
+    },
+ ......
+    {
+        "id": 5,
+        "realprice": null,
+        "date": "2021-05-06T18:13:56.712500Z",
+        "car": {
+            "id": 5,
+            "color": "White",
+            "price": "11111.00",
+            "serialid": 11112,
+            "present": false,
+            "model": 4
+        },
+        "dealer": {
+            "id": 2,
+            "name": "Petr",
+            "phone": "+78129990033"
+        }
+    }
+]
